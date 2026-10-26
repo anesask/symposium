@@ -1,0 +1,235 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: var(--font-display), Georgia, serif;
+  --font-sans: var(--font-body), Georgia, serif;
+  --font-caps: var(--font-caps-face), Georgia, serif;
+  /* Red-figure pottery: black slip, terracotta, bone, a little gold. */
+  --color-bg: #0e0a08;
+  --color-surface: #18110d;
+  --color-surface-2: #231913;
+  --color-line: #3b2b20;
+  --color-ink: #f0e4cc;
+  --color-muted: #a8927a;
+  --color-gold: #c9a45c;
+  --color-go: #dcc89a; /* bone: no green against the warm palette */
+  --color-nogo: #c0503e;
+  --color-cond: #d2a24c;
+  --color-accent: var(--accent);
+}
+
+:root {
+  --accent: #b8643c;
+  color-scheme: dark;
+}
+body[data-room="boardroom"] { --accent: #b8643c; }
+
+html, body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+body { font-size: 17px; }
+
+/* Every small tracked label is set in inscription capitals. */
+.uppercase { font-family: var(--font-caps); font-weight: 400; }
+button, input, textarea, select { font-family: inherit; }
+
+/* Greek key (meander) ornament. */
+.meander {
+  height: 10px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='10' viewBox='0 0 20 10'%3E%3Cpath d='M0 9.5h4.5V3.5h8v4h-4V5.5' fill='none' stroke='%23c9a45c' stroke-width='1.1'/%3E%3Cpath d='M12.5 9.5H20' fill='none' stroke='%23c9a45c' stroke-width='1.1'/%3E%3C/svg%3E") repeat-x;
+  opacity: .55;
+}
+
+.eyebrow {
+  font-family: var(--font-caps);
+  font-size: 0.78rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* ---------- Motion ---------- */
+@keyframes bubble-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.bubble-in { animation: bubble-in 220ms ease-out both; }
+
+@keyframes caret { 50% { opacity: 0; } }
+.caret { display: inline-block; width: 0.5ch; height: 1em; margin-left: 2px; vertical-align: -0.15em; background: var(--accent); animation: caret 900ms steps(1) infinite; }
+
+@keyframes ring { 0%, 100% { box-shadow: 0 0 0 2px var(--accent), 0 0 14px 2px color-mix(in srgb, var(--accent) 55%, transparent); } 50% { box-shadow: 0 0 0 3px var(--accent), 0 0 28px 6px color-mix(in srgb, var(--accent) 35%, transparent); } }
+.speaking-ring { animation: ring 1.4s ease-in-out infinite; }
+
+@keyframes pulse-accent { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 70%, transparent); } 50% { box-shadow: 0 0 0 8px transparent; } }
+.pulse-accent { --accent: var(--color-gold); animation: pulse-accent 1.6s ease-out infinite; }
+
+@keyframes vote-pop { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: none; } }
+.vote-pop { animation: vote-pop 260ms cubic-bezier(.2,1.4,.4,1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
+}
+
+@keyframes sheet-in { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+.sheet-in { animation: sheet-in 240ms ease-out both; }
+
+@keyframes verdict-in { from { opacity: 0; transform: scale(0.85); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+.verdict-in { animation: verdict-in 600ms cubic-bezier(.2,1,.3,1) both; }
+
+@keyframes tally-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.tally-fill { transform-origin: left; animation: tally-fill 380ms ease-out both; }
+
+/* ---------- The table and room scenes ---------- */
+.table-wood {
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 60%, rgba(0,0,0,.35) 61% 62%, transparent 63%),
+    repeating-radial-gradient(circle at 46% 44%, rgba(255,220,170,.035) 0 3px, rgba(0,0,0,.05) 3px 7px),
+    radial-gradient(circle at 40% 35%, #6e4a2c 0%, #553620 45%, #3b2515 80%, #2a190e 100%);
+  box-shadow: inset 0 0 0 10px #2f1d11, inset 0 0 0 12px rgba(255,200,140,.08), inset 0 -20px 60px rgba(0,0,0,.45), 0 30px 80px rgba(0,0,0,.6);
+}
+
+.room-scene { isolation: isolate; }
+.room-scene::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: var(--scene-bg);
+  mask-image: radial-gradient(ellipse 80% 75% at 50% 52%, #000 35%, transparent 95%);
+}
+body[data-room="boardroom"] .room-scene {
+  --scene-bg: radial-gradient(ellipse 55% 55% at 50% 58%, rgba(224,161,58,.13), transparent 70%), radial-gradient(ellipse 40% 50% at 92% 20%, rgba(80,60,40,.25), transparent 70%), radial-gradient(ellipse 40% 50% at 5% 40%, rgba(60,80,40,.18), transparent 70%), linear-gradient(180deg, #1a1511, #141210);
+}
+body[data-room="boardroom"] .room-scene[data-scene="art"] { --scene-bg: radial-gradient(ellipse 70% 60% at 50% 55%, rgba(14,10,8,.35), rgba(14,10,8,.85) 75%), url(/scenes/hall.webp) center/cover; }
+
+.spotlight { background: radial-gradient(circle, color-mix(in srgb, var(--accent) 38%, transparent) 0%, color-mix(in srgb, var(--accent) 12%, transparent) 45%, transparent 70%); mix-blend-mode: screen; }
+.speaking-ring { box-shadow: 0 0 0 3px var(--accent), 0 0 30px 8px color-mix(in srgb, var(--accent) 45%, transparent); }
+
+/* ---------- Character select ---------- */
+/* The temple stage, pushed far back: atmosphere, not a picture in a box. */
+.scenery {
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 45%, rgba(14,10,8,.55), rgba(14,10,8,.92) 80%),
+    linear-gradient(180deg, rgba(14,10,8,.7), rgba(14,10,8,.5) 40%, rgba(14,10,8,.95)),
+    url(/scenes/stage.webp) center 35%/cover;
+}
+/* Portraits that fade out of the dark instead of sitting in a frame. */
+.feather { -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 48%, transparent 72%); mask-image: radial-gradient(circle at 50% 45%, #000 48%, transparent 72%); }
+.fighter-frame { box-shadow: 0 0 0 1px color-mix(in srgb, var(--fighter) 60%, transparent), 0 0 40px -6px color-mix(in srgb, var(--fighter) 70%, transparent); }
+@keyframes fighter-in { from { opacity: .35; } to { opacity: 1; } }
+.fighter-in { animation: fighter-in 450ms ease both; }
+.stat-pip { transition: background-color 400ms ease; }
+.select-tile.is-hover, .select-tile:focus-visible { box-shadow: 0 0 0 2px var(--tile), 0 0 22px -2px var(--tile); }
+@keyframes lock-flash { 0% { filter: brightness(1.15); } 100% { filter: none; } }
+.lock-flash { animation: lock-flash 450ms ease-out both; }
+.seat-ready { border-color: rgba(201,164,92,.6); }
+.seat-over { border-color: var(--color-gold); border-style: solid; transform: scale(1.12); box-shadow: 0 0 16px -4px var(--color-gold); }
+
+/* Primary action: bronze with a gold edge. */
+.btn-primary {
+  background: linear-gradient(180deg, #3b2919, #23170f);
+  border: 1px solid rgba(201,164,92,.55);
+  color: var(--color-ink);
+  font-family: var(--font-caps);
+  letter-spacing: .1em;
+  box-shadow: inset 0 1px 0 rgba(255,225,170,.08), 0 6px 18px rgba(0,0,0,.35);
+  transition: border-color 150ms, background 150ms, color 150ms;
+}
+.btn-primary:hover:not(:disabled) { border-color: var(--color-gold); color: #fff6e4; background: linear-gradient(180deg, #4a321d, #2a1b11); }
+.btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+.select-tile[draggable="true"] { cursor: grab; }
+
+/* ---------- Pen and papyrus ---------- */
+@keyframes ink-in { from { color: var(--color-gold); opacity: .1; filter: blur(1.5px); } 55% { opacity: 1; filter: none; } to { color: var(--color-ink); } }
+.ink-in { animation: ink-in 700ms ease-out both; }
+.quill { display: inline-block; width: 1.15em; height: 1.15em; margin-left: 3px; vertical-align: -0.2em; color: var(--color-gold); transform-origin: 10% 90%; animation: quill .45s ease-in-out infinite alternate; }
+@keyframes quill { from { transform: rotate(-8deg) translateY(0); } to { transform: rotate(5deg) translate(1px, -2px); } }
+.papyrus-sheet {
+  background:
+    repeating-linear-gradient(90deg, rgba(255,226,170,.035) 0 1px, transparent 1px 6px),
+    repeating-linear-gradient(0deg, rgba(255,226,170,.025) 0 1px, transparent 1px 9px),
+    radial-gradient(ellipse at 25% 0%, rgba(201,164,92,.09), transparent 60%),
+    linear-gradient(180deg, #241910, #1a120b);
+  border-radius: 2px 6px 6px 2px;
+  box-shadow: inset 0 0 24px rgba(0,0,0,.45), 0 6px 16px rgba(0,0,0,.28);
+  animation: unroll 650ms cubic-bezier(.2,.8,.3,1) both;
+  transition: box-shadow .8s;
+}
+@keyframes unroll { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(-12px -12px -12px -12px); } }
+.papyrus-sheet.is-writing { box-shadow: inset 0 0 24px rgba(0,0,0,.35), 0 0 0 1px rgba(201,164,92,.22), 0 10px 30px rgba(0,0,0,.4), 0 0 46px -12px rgba(224,170,90,.4); }
+/* Candlelight flickering on the sheet being written. */
+.papyrus-sheet.is-writing::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: radial-gradient(ellipse at 18% 35%, rgba(255,190,110,.13), transparent 65%);
+  animation: flicker 2.3s ease-in-out infinite;
+}
+@keyframes flicker { 0%, 100% { opacity: .75; } 25% { opacity: 1; } 42% { opacity: .6; } 68% { opacity: .95; } 84% { opacity: .7; } }
+.scroll-rod {
+  position: absolute; left: -9px; right: -9px; bottom: -6px; height: 11px; border-radius: 6px; pointer-events: none;
+  background: linear-gradient(180deg, #a57f4b, #6d4e2b 45%, #3a2716);
+  box-shadow: 0 3px 6px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,232,190,.3);
+  opacity: 0; transform: translateY(10px) scaleX(.85);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.scroll-rod.top { top: -6px; bottom: auto; transform: translateY(-10px) scaleX(.85); }
+.scroll-rod::before, .scroll-rod::after { content: ""; position: absolute; top: -2px; width: 9px; height: 15px; border-radius: 4px; background: linear-gradient(90deg, #2c1c10, #7a5a33, #2c1c10); }
+.scroll-rod::before { left: -4px; }
+.scroll-rod::after { right: -4px; }
+.is-writing > .scroll-rod { opacity: 1; transform: none; }
+
+/* ---------- The verdict scroll ---------- */
+.scroll-sheet {
+  /* Ink on papyrus: the palette flips inside the scroll. */
+  --color-ink: #2a1a0c;
+  --color-muted: #6b5233;
+  --color-line: rgba(90,58,24,.28);
+  --color-gold: #8a5a1c;
+  --color-go: #2e1f10; /* sepia ink */
+  --color-nogo: #9a2e1c; /* rubric red */
+  --color-cond: #9a6a14; /* ochre */
+  --color-surface: rgba(255,248,225,.25);
+  --color-surface-2: rgba(255,248,225,.35);
+  --color-bg: #e2cc98;
+  --accent: #9a4a22;
+  color: var(--color-ink);
+  background:
+    repeating-linear-gradient(90deg, rgba(110,72,28,.07) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(0deg, rgba(110,72,28,.06) 0 1px, transparent 1px 8px),
+    radial-gradient(ellipse at 50% 35%, #f0e1b8, #dcc28a 65%, #bf9c60 100%);
+  box-shadow: inset 0 0 50px rgba(95,58,20,.45), inset 0 0 0 1px rgba(95,58,20,.25), 0 18px 40px rgba(0,0,0,.5);
+  animation: unroll 900ms cubic-bezier(.2,.8,.3,1) both;
+}
+.scroll-sheet > .scroll-rod { opacity: 1; transform: none; height: 16px; left: -12px; right: -12px; }
+.scroll-sheet > .scroll-rod.top { top: -9px; }
+.scroll-sheet > .scroll-rod:not(.top) { bottom: -9px; }
+.ink-draw { fill: transparent; stroke: currentColor; stroke-width: 1.2px; stroke-dasharray: 1100; stroke-dashoffset: 1100; animation: ink-draw 1.5s ease-in-out .35s forwards, ink-fill .7s ease 1.4s forwards; }
+@keyframes ink-draw { to { stroke-dashoffset: 0; } }
+@keyframes ink-fill { to { fill: currentColor; } }
+.ink-line { animation: ink-write 1s ease-out both; }
+@keyframes ink-write { from { clip-path: inset(-6px 100% -6px -6px); opacity: .35; } to { clip-path: inset(-6px -6px -6px -6px); opacity: 1; } }
+/* Tally marks as brush strokes: slightly uneven ends. */
+.ink-stroke { border-radius: 40% 60% 55% 45% / 60% 40% 60% 40%; opacity: .9; }
+/* The thinker being answered in a rebuttal. */
+.addressed-ring { box-shadow: 0 0 0 2px rgba(201,164,92,.85), 0 0 18px 2px rgba(201,164,92,.3); }
+
+/* The wax seal, pressed on once the verdict is written. */
+.wax-seal {
+  position: absolute; right: 18px; top: 16px; width: 62px; height: 62px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 36% 30%, #c65a3e, #8f2c1c 55%, #5c1a0f);
+  box-shadow: 0 3px 6px rgba(60,20,8,.45), inset 0 0 0 4px rgba(0,0,0,.12), inset 0 -4px 8px rgba(0,0,0,.35), inset 0 3px 5px rgba(255,190,150,.25);
+  transform: rotate(-9deg);
+  animation: seal-in .45s cubic-bezier(.3,1.6,.5,1) 2.1s both;
+}
+.wax-seal img { width: 72%; filter: grayscale(1) brightness(.32) contrast(1.6); mix-blend-mode: multiply; opacity: .8; }
+@keyframes seal-in { from { opacity: 0; transform: rotate(-9deg) scale(1.7); } to { opacity: 1; transform: rotate(-9deg) scale(1); } }
+/* Re-run slip and the struck-out old verdict. */
+.scroll-sheet.scroll-slip { animation: none; box-shadow: inset 0 0 30px rgba(95,58,20,.4), inset 0 0 0 1px rgba(95,58,20,.25), 0 8px 20px rgba(0,0,0,.35); }
+.ink-strike { position: relative; display: inline-block; }
+.ink-strike::after { content: ""; position: absolute; left: -4px; right: -4px; top: 52%; height: 2px; border-radius: 2px; background: var(--color-nogo); transform: rotate(-4deg) scaleX(0); transform-origin: left; animation: strike .6s ease-out .4s forwards; }
+@keyframes strike { to { transform: rotate(-4deg) scaleX(1); } }
+/* While saving the verdict as an image: everything in its finished state. */
+.no-anim, .no-anim * { animation: none !important; transition: none !important; }
+.no-anim .ink-draw { fill: currentColor; stroke-dashoffset: 0; }
+.no-anim .ink-strike::after { transform: rotate(-4deg) scaleX(1); }
+/* Socrates's invitation on the seat screen. */
+.guest-card { background: linear-gradient(90deg, rgba(201,164,92,.06), transparent 70%); }
+.guest-card.is-invited { background: linear-gradient(90deg, rgba(201,164,92,.16), rgba(201,164,92,.03) 70%); box-shadow: 0 0 24px -10px rgba(201,164,92,.5); }

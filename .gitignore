@@ -1,0 +1,34 @@
+# Devpost Learn: personal context stays out of commits
+/devpost/learner-profile.md
+
+# Local credentials
+.env
+.env.*
+!.env.example
+
+# Build output and dependencies
+/node_modules
+/.next
+/out
+next-env.d.ts
+*.tsbuildinfo
+
+# Stray key files
+.elevenlabs
+
+# Demo video work (raw takes, clips, voice)
+/video/
+
+# Local tooling: the Devpost skill pack copies (not part of the project)
+/agent/
+/.agents/
+/.claude/
+skills-lock.json
+
+# Concept sketches (kept locally, not published)
+/first_idea.png
+/second_idea.png
+/the-table-concept-art.png
+
+# Local Devpost upload kit
+/devpost-submission/
